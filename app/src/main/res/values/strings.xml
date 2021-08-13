@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MVVM-ROOOM</string>
+    <string name="enter_person_name">Enter Person Name</string>
+    <string name="enter_person_name">Enter Person Name</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="submit">Submit</string>
+    <string name="enter_person_mobile_number">Enter Person Mobile Number</string>
+</resources>
