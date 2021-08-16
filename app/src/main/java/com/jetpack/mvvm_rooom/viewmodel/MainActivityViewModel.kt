@@ -1,36 +1,47 @@
-package com.jetpack.mvvm_rooom.ViewModel
+package com.jetpack.mvvm_rooom.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jetpack.mvvm_rooom.Model.Person
-import com.jetpack.mvvm_rooom.Repositories.MainActivityRepository
+import com.jetpack.mvvm_rooom.model.Person
+import com.jetpack.mvvm_rooom.repositories.MainActivityRepository
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class MainActivityViewModel : ViewModel() {
-
+    private  val TAG = "MainActivityViewModel"
     var personDataList: MutableLiveData<List<Person>>
     lateinit var repository: MainActivityRepository
 
     //init block will call immediately once after the class creation
     init {
+
         personDataList = repository.allPersonsData
         getAllPersonsData()
     }
 
      fun getAllPersonsData(): MutableLiveData<List<Person>> {
         viewModelScope.launch {
-            personDataList.postValue(repository.getAllPersonsData() as List<Person>)
+            try {
+                personDataList.postValue(repository.getAllPersonsData() as List<Person>)
+            }catch (ex:Exception){
+                Log.d(TAG, ex.message.toString())
+            }
         }
         return personDataList
     }
 
     suspend fun insertPersonData(person: Person){
-
-
+        try {
+            repository.insertPersonData(person)
+        }catch (ex:Exception){
+            Log.d(TAG, ex.message.toString())
+        }
     }
 
     suspend fun deletePersonRecords(mobileNo:Int){
+
 
     }
     suspend fun editPersonRecords(person: Person){

@@ -1,4 +1,4 @@
-package com.jetpack.mvvm_rooom.Model
+package com.jetpack.mvvm_rooom.model
 
 
 /*Use Case: Here we are creating the Person data class to insert the data from view model class.*/

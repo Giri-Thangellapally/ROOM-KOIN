@@ -3,10 +3,10 @@
     <data>
         <variable
             name="viewModel"
-            type="com.jetpack.mvvm_rooom.ViewModel.MainActivityViewModel" />
+            type="com.jetpack.mvvm_rooom.viewmodel.MainActivityViewModel" />
     <variable
         name="personDetails"
-        type="com.jetpack.mvvm_rooom.Model.Person" />
+        type="com.jetpack.mvvm_rooom.model.Person" />
     </data>
 
 
@@ -16,7 +16,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".View.MainActivity">
+        tools:context=".view.MainActivity">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -41,7 +41,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:onClick="@{()->viewModel.insertPersonData()}"
                 android:text="@string/submit" />
         </LinearLayout>
 
@@ -63,7 +62,6 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:orientation="vertical">
-
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/etPersonMobileNo"
