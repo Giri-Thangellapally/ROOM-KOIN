@@ -7,8 +7,7 @@ import androidx.room.Query
 import com.jetpack.mvvm_rooom.model.Person
 
 @Dao
-interface PersonDAO {
-
+public interface PersonDAO{
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertData(person: Person)
