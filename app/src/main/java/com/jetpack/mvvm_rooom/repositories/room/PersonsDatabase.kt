@@ -11,30 +11,32 @@ abstract class PersonsDatabase : RoomDatabase() {
 
     abstract fun personDao(): PersonDAO
 
-    companion object {
-
-        @Volatile
-        private var DB_INSTANCE: PersonsDatabase? = null
-
-        fun getDataBase(context: Context): PersonsDatabase {
-
-            val temp_db_instance = DB_INSTANCE
-
-            if (temp_db_instance != null) {
-                return temp_db_instance
-            }
-            synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext, PersonsDatabase::class.java, "persons_database_v1"
-                ).build()
-                DB_INSTANCE = instance
-                return instance
-            }
-
-        }
 
 
-    }
+//    companion object {
+//
+//        @Volatile
+//        private var DB_INSTANCE: PersonsDatabase? = null
+//
+//        fun getDataBase(context: Context): PersonsDatabase {
+//
+//            val temp_db_instance = DB_INSTANCE
+//
+//            if (temp_db_instance != null) {
+//                return temp_db_instance
+//            }
+//
+//            synchronized(this) {
+//                val instance = Room.databaseBuilder(
+//                    context.applicationContext, PersonsDatabase::class.java, "persons_database_v1"
+//                ).build()
+//                DB_INSTANCE = instance
+//                return instance
+//            }
+//
+//        }
+//
+//    }
 
 
 }

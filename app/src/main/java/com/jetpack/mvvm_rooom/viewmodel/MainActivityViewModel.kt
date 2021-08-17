@@ -9,22 +9,28 @@ import com.jetpack.mvvm_rooom.repositories.MainActivityRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class MainActivityViewModel : ViewModel() {
+class MainActivityViewModel(private val repository: MainActivityRepository) : ViewModel() {
+
     private  val TAG = "MainActivityViewModel"
-    var personDataList: MutableLiveData<List<Person>>
-    lateinit var repository: MainActivityRepository
+        var personDataList= MutableLiveData<List<Person>>()
 
-    //init block will call immediately once after the class creation
     init {
+        try {
+            personDataList=repository.allPersonsData
+            getAllPersonsData()
+        }catch (exe:Exception){
+            Log.d(TAG, "${exe.message.toString()}")
+        }
 
-        personDataList = repository.allPersonsData
-        getAllPersonsData()
+    }
+    fun sayHi():String{
+        return "Helooooooooo"
     }
 
      fun getAllPersonsData(): MutableLiveData<List<Person>> {
         viewModelScope.launch {
             try {
-                personDataList.postValue(repository.getAllPersonsData() as List<Person>)
+//                personDataList.postValue(repository.getAllPersonsData() as List<Person>)
             }catch (ex:Exception){
                 Log.d(TAG, ex.message.toString())
             }
@@ -34,7 +40,7 @@ class MainActivityViewModel : ViewModel() {
 
     suspend fun insertPersonData(person: Person){
         try {
-            repository.insertPersonData(person)
+//            repository.insertPersonData(person)
         }catch (ex:Exception){
             Log.d(TAG, ex.message.toString())
         }

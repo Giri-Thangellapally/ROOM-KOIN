@@ -68,7 +68,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:text="@={personDetails.name}"
+                        android:text="@={personDetails.personName}"
                         android:hint="@string/enter_person_name" />
 
                     <androidx.appcompat.widget.AppCompatEditText
@@ -76,7 +76,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:text="@={personDetails.mobileNo}"
+                        android:text="@={personDetails.personNo}"
                         android:hint="@string/enter_person_mobile_number" />
 
                 </LinearLayout>

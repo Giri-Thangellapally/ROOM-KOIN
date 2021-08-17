@@ -9,7 +9,9 @@ package com.jetpack.mvvm_rooom.model
 
 
 data class Person(
-     var name:String,
-    var mobileNo:String,
-    var photo:String
+
+     var id:Int,
+     var personName:String,
+     var PersonNo:String,
+     var PersonImg:String
     )

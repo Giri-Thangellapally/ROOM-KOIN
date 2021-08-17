@@ -9,12 +9,11 @@ import com.jetpack.mvvm_rooom.model.Person
 @Dao
 interface PersonDAO {
 
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertData(person: Person)
 
     @Query("SELECT * FROM persons_table ORDER BY id ASC")
     fun getAllPersonsData(): List<Person>
-
-
 
 }
