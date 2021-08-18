@@ -8,12 +8,15 @@ import androidx.room.Query
 import com.jetpack.mvvm_rooom.model.Person
 
 @Dao
- public interface PersonDAO{
+ abstract class  PersonDAO{
+    lateinit var allPersonsList: List<Person>
 
   @Insert(onConflict = OnConflictStrategy.IGNORE)
-     fun insertData(person: Person?)
+     fun insertData(person: Person){}
 
    @Query("SELECT * FROM person_table")
-    fun getAllPersonsData(): List<Person>
+    fun getAllPersonsData(): List<Person>{
+      return  allPersonsList
+    }
 
 }

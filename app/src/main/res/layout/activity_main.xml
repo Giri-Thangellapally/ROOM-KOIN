@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-    <data>
-    <variable
-        name="personDetails"
-        type="com.jetpack.mvvm_rooom.model.Person" />
-    </data>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,7 +60,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:text="@={personDetails.personName}"
                         android:hint="@string/enter_person_name" />
 
                     <androidx.appcompat.widget.AppCompatEditText
@@ -73,7 +67,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:text="@={personDetails.personNo}"
                         android:hint="@string/enter_person_mobile_number" />
 
                 </LinearLayout>
