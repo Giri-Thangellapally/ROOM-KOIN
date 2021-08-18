@@ -13,7 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MainActivity : AppCompatActivity() {
     private  val TAG = "MainActivity==>"
 
-    private val viewModel by viewModel<MainActivityViewModel>()
+     val viewModel by viewModel<MainActivityViewModel>()
 
     lateinit var dataBinding: ActivityMainBinding
 
@@ -21,32 +21,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         //Initialize the UI
-        initUi()
-        viewModel.sayHi()
-        //Initialise View Model
-//        initViewModelObserver()
+         initUi()
+        initViewModelObserver()
     }
-
-    private fun initViewModelObserver() {
-
-        try {
-
-            viewModel.personDataList.observe(this, Observer {
-
-                Log.d(TAG, it.size.toString())
-
-            })
-
-        }catch (exception:Exception){
-            Log.d(TAG, exception.message.toString())
-        }
-    }
-
     private fun initUi() {
         //Apply scope function will return the context as the object
         dataBinding.apply {
 
         }
     }
+
+    private fun initViewModelObserver() {
+//        try {
+            viewModel.personDataList.observe(this, Observer {
+
+                Log.d(TAG, it.size.toString())
+
+            })
+
+//        }catch (exception:Exception){
+//            Log.d(TAG, exception.message.toString())
+//        }
+    }
+
 
 }

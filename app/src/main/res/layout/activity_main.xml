@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
-        <variable
-            name="viewModel"
-            type="com.jetpack.mvvm_rooom.viewmodel.MainActivityViewModel" />
     <variable
         name="personDetails"
         type="com.jetpack.mvvm_rooom.model.Person" />
