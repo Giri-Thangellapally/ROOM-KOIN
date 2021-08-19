@@ -21,11 +21,7 @@ class MainActivityViewModel(private val repository: MainActivityRepository) : Vi
 
     private fun getAllPersonsData(): MutableLiveData<List<PersonTable>> {
         viewModelScope.launch {
-            try {
                 personDataList.postValue(repository.getAllPersonsData())
-            } catch (ex: Exception) {
-                Log.d(TAG, ex.message.toString())
-            }
         }
         return personDataList
     }

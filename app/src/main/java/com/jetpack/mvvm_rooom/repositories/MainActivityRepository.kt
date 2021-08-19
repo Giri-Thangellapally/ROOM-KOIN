@@ -23,12 +23,11 @@ class MainActivityRepository(private val personDAO: PersonDAO){
     }
 
     /*insert the person data into the database*/
-    suspend fun insertPersonData(person: PersonTable):Long{
+    suspend fun insertPersonData(person: PersonTable){
         val res:Long
         withContext(Dispatchers.IO){
-             res= personDAO.insertData(person)
+        personDAO.insertData(person)
         }
-        return  res
     }
 
 }
