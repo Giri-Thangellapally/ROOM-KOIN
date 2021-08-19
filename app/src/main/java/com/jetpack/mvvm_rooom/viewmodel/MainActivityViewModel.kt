@@ -4,51 +4,39 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jetpack.mvvm_rooom.model.Person
 import com.jetpack.mvvm_rooom.repositories.MainActivityRepository
+import com.jetpack.mvvm_rooom.repositories.room.PersonTable
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class MainActivityViewModel(repository: MainActivityRepository) : ViewModel() {
+class MainActivityViewModel(private val repository: MainActivityRepository) : ViewModel() {
 
-    private  val TAG = "MainActivityViewModel"
-        var personDataList= MutableLiveData<List<Person>>()
+    private val TAG = "MainActivityViewModel"
+    var personDataList = MutableLiveData<List<PersonTable>>()
 
     init {
-        try {
-            personDataList=repository.allPersonsData
-            getAllPersonsData()
-        }catch (exe:Exception){
-            Log.d(TAG, "${exe.message.toString()}")
-        }
-
+        personDataList.postValue(repository.allPersonsData)
+        getAllPersonsData()
     }
 
-    fun getAllPersonsData(): MutableLiveData<List<Person>> {
+    private fun getAllPersonsData(): MutableLiveData<List<PersonTable>> {
         viewModelScope.launch {
             try {
-//                personDataList.postValue(repository.getAllPersonsData() as List<Person>)
-            }catch (ex:Exception){
+                personDataList.postValue(repository.getAllPersonsData())
+            } catch (ex: Exception) {
                 Log.d(TAG, ex.message.toString())
             }
         }
         return personDataList
     }
 
-    public suspend fun insertPersonData(person: Person){
-        try {
-//            repository.insertPersonData(person)
-        }catch (ex:Exception){
-            Log.d(TAG, ex.message.toString())
+
+    fun insertPersonData(person: PersonTable) {
+        if (person.personName.isNotEmpty()) {
+            viewModelScope.launch {
+                repository.insertPersonData(person)
+            }
         }
-    }
-
-    suspend fun deletePersonRecords(mobileNo:Int){
-
-
-    }
-    suspend fun editPersonRecords(person: Person){
-
     }
 
 

@@ -15,25 +15,21 @@ import kotlin.math.sin
 
 //Module is the Component where we have to include the all dependency injections
 //
-
-val viewModelModule = module {
-    viewModel {
-        MainActivityViewModel(get())
-    }
-}
+private  val TAG = "KoinModules==>"
 
 val mainActivityRepositoryModule = module {
+    Log.d(TAG, ":mainActivityRepositoryModule ")
+
     fun provideRepository(personDAO: PersonDAO): MainActivityRepository {
         return MainActivityRepository(personDAO)
     }
+
     single {
         provideRepository(get())
     }
 }
-
-
 val databaseModule = module {
-
+    Log.d(TAG, ":databaseModule ")
     fun provideDatabase(application: Application): PersonsDatabase {
         return Room.databaseBuilder(application, PersonsDatabase::class.java, "selflearn.database")
             .fallbackToDestructiveMigration()
@@ -42,9 +38,21 @@ val databaseModule = module {
     }
 
     fun personDao(database: PersonsDatabase): PersonDAO {
+        Log.d(TAG, "personDao: ")
         return database.personDao()
     }
 
+
     single { provideDatabase(androidApplication()) }
     single { personDao(get()) }
+}
+
+val viewModelModule = module {
+    Log.d(TAG, ":viewModelModule ")
+    fun provideMainViewModel(repository: MainActivityRepository):MainActivityViewModel{
+        return MainActivityViewModel(repository)
+    }
+    viewModel {
+        provideMainViewModel(get())
+    }
 }

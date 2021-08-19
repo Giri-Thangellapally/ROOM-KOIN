@@ -1,43 +1,34 @@
 package com.jetpack.mvvm_rooom.repositories
 
-import android.app.Application
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.jetpack.mvvm_rooom.model.Person
 import com.jetpack.mvvm_rooom.repositories.room.PersonDAO
-import com.jetpack.mvvm_rooom.repositories.room.PersonsDatabase
+import com.jetpack.mvvm_rooom.repositories.room.PersonTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.Exception
-
-class MainActivityRepository(personDAO: PersonDAO){
-
-    private  val TAG = "MainActivityRepository"
-    lateinit var allPersonsData: MutableLiveData<List<Person>>
-
 
 /*
-    suspend fun getAllPersonsData() : MutableLiveData<List<Person>> {
+repository class where we decide to get the data either from database or network class
+*/
 
+class MainActivityRepository(private val personDAO: PersonDAO){
+
+     var allPersonsData= listOf<PersonTable>()
+
+    /*get the all persons data from the database*/
+    suspend fun getAllPersonsData() : List<PersonTable> {
         withContext(Dispatchers.IO){
-            try {
-                allPersonsData.postValue(personDAO.getAllPersonsData())
-            }catch (ex:Exception){
-                Log.d(TAG, ex.message.toString())
-            }
+                allPersonsData=personDAO.getAllPersonsData()
         }
         return allPersonsData
     }
-*/
 
-//    suspend fun insertPersonData(person: Person){
-//        withContext(Dispatchers.IO){
-//            try {
-//               personDAO.insertData(person)
-//            }catch (ex:Exception){
-//                Log.d(TAG, ex.message.toString())
-//            }
-//        }
-//    }
+    /*insert the person data into the database*/
+    suspend fun insertPersonData(person: PersonTable):Long{
+        val res:Long
+        withContext(Dispatchers.IO){
+             res= personDAO.insertData(person)
+        }
+        return  res
+    }
 
 }

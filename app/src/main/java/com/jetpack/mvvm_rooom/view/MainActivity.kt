@@ -4,45 +4,44 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import com.jetpack.mvvm_rooom.R
 import com.jetpack.mvvm_rooom.viewmodel.MainActivityViewModel
 import com.jetpack.mvvm_rooom.databinding.ActivityMainBinding
+import com.jetpack.mvvm_rooom.repositories.room.PersonTable
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-    private  val TAG = "MainActivity==>"
+    //Initialized the ViewModel from koin(lazy) dependency injection.
+    private val viewModel by viewModel<MainActivityViewModel>()
 
-     val viewModel by viewModel<MainActivityViewModel>()
-
-    lateinit var dataBinding: ActivityMainBinding
+    //data binding to avoid the FindViewById .
+    private lateinit var dataBinding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        //Initialize the UI
-         initUi()
+        //initialize the Views
+        initViews()
+        //Initialize ViewModel observer
         initViewModelObserver()
     }
-    private fun initUi() {
-        //Apply scope function will return the context as the object
-        dataBinding.apply {
 
+    private fun initViews() {
+        dataBinding.apply {
+            btnSubmit.setOnClickListener {
+                viewModel.insertPersonData(
+                    PersonTable(
+                        personName = etPersonName.text.toString(),
+                        personNo = etPersonMobileNo.text.toString()
+                    )
+                )
+            }
         }
     }
 
     private fun initViewModelObserver() {
-//        try {
-            viewModel.personDataList.observe(this, Observer {
+        viewModel.personDataList.observe(this, {
 
-                Log.d(TAG, it.size.toString())
-
-            })
-
-//        }catch (exception:Exception){
-//            Log.d(TAG, exception.message.toString())
-//        }
+        })
     }
-
-
 }

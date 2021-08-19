@@ -7,11 +7,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "person_table")
 data class PersonTable(
     @PrimaryKey(autoGenerate = true)
-    val id : Long,
+    var id : Long=0,
     @ColumnInfo(name = "personName")
-     val personName: String ,
+     var personName: String="" ,
     @ColumnInfo(name = "personNo")
-     val personNo: String,
+     var personNo: String="",
     @ColumnInfo(name = "personImg")
-     val personImg: String
+     var personImg: String=""
 )
