@@ -13,6 +13,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            imgPath="@{person.personImg}"
             android:id="@+id/appCompatImageView"
             android:layout_width="55dp"
             android:layout_height="55dp"
@@ -38,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:textColor="@color/purple_700"
                 android:layout_height="wrap_content"
-                android:text='@{person.id+" "+person.personName}' />
+                android:text='@{person.personName}' />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/personMobile"
