@@ -12,7 +12,7 @@ import androidx.room.Query
   @Insert(onConflict = OnConflictStrategy.IGNORE)
      fun insertData(person: PersonTable): Long
 
-   @Query("SELECT * FROM person_table WHERE id")
+   @Query("SELECT * FROM person_table ORDER BY id DESC")
     fun getAllPersonsData(): List<PersonTable>
 
 }

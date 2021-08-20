@@ -4,4 +4,7 @@
     <string name="take_photo">Take Photo</string>
     <string name="submit">Submit</string>
     <string name="enter_person_mobile_number">Enter Person Mobile Number</string>
+    <string name="choose_from_camera">Choose From Camera</string>
+    <string name="choose_from_gallery">Choose From Gallery</string>
+    <string name="choose_source">Choose Source</string>
 </resources>

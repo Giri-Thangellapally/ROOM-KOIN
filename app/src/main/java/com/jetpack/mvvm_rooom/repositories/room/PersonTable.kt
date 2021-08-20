@@ -1,5 +1,6 @@
 package com.jetpack.mvvm_rooom.repositories.room
 
+import android.graphics.Bitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,9 +10,9 @@ data class PersonTable(
     @PrimaryKey(autoGenerate = true)
     var id : Long=0,
     @ColumnInfo(name = "personName")
-     var personName: String="" ,
+     var personName: String,
     @ColumnInfo(name = "personNo")
-     var personNo: String="",
+     var personNo: String,
     @ColumnInfo(name = "personImg")
-     var personImg: String=""
+     var personImg: String,
 )

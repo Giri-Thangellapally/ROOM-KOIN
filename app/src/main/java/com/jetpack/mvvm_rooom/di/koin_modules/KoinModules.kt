@@ -1,11 +1,14 @@
 package com.jetpack.mvvm_rooom.di.koin_modules
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.room.Room
 import com.jetpack.mvvm_rooom.repositories.MainActivityRepository
 import com.jetpack.mvvm_rooom.repositories.room.PersonDAO
+import com.jetpack.mvvm_rooom.repositories.room.PersonTable
 import com.jetpack.mvvm_rooom.repositories.room.PersonsDatabase
+import com.jetpack.mvvm_rooom.view.adapters.PersonAdapter
 import com.jetpack.mvvm_rooom.viewmodel.MainActivityViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -26,6 +29,9 @@ val mainActivityRepositoryModule = module {
 
     single {
         provideRepository(get())
+    }
+    single {
+        PersonAdapter()
     }
 }
 val databaseModule = module {

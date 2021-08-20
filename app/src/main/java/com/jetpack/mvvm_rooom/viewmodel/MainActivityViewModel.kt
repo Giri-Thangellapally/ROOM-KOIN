@@ -31,9 +31,8 @@ class MainActivityViewModel(private val repository: MainActivityRepository) : Vi
         if (person.personName.isNotEmpty()) {
             viewModelScope.launch {
                 repository.insertPersonData(person)
+                personDataList.postValue(repository.getAllPersonsData())
             }
         }
     }
-
-
 }
