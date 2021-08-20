@@ -1,6 +1,6 @@
 # ROOM-KOIN
 
-:MVVM, ROOM, KOIN, DATA BINDING.
+:MVVM, ROOM, KOIN, DATA BINDING,COIL
 
 In this project i want to create the basic app with ROOM databse and KOIN dependency injection.
 
