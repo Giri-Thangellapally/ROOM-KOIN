@@ -14,5 +14,5 @@ data class PersonTable(
     @ColumnInfo(name = "personNo")
      var personNo: String,
     @ColumnInfo(name = "personImg")
-     var personImg: String,
+     var personImg: Bitmap,
 )

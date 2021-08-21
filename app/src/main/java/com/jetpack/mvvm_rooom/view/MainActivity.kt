@@ -1,25 +1,21 @@
 package com.jetpack.mvvm_rooom.view
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
-import android.os.StrictMode
 import android.provider.MediaStore
 import android.widget.Toast
-import androidx.core.content.FileProvider
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil.load
-import com.iceteck.silicompressorr.PathUtil
-import com.iceteck.silicompressorr.SiliCompressor
-import com.jetpack.mvvm_rooom.BuildConfig
 import com.jetpack.mvvm_rooom.R
 import com.jetpack.mvvm_rooom.viewmodel.MainActivityViewModel
 import com.jetpack.mvvm_rooom.databinding.ActivityMainBinding
+import com.jetpack.mvvm_rooom.other.AppUtils.Companion.loadPic
 import com.jetpack.mvvm_rooom.repositories.room.PersonTable
 import com.jetpack.mvvm_rooom.view.adapters.PersonAdapter
 import com.karumi.dexter.Dexter
@@ -29,20 +25,19 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
     //Initialized the ViewModel from koin(lazy) dependency injection.
     private val viewModel by viewModel<MainActivityViewModel>()
+
     //data binding to avoid the FindViewById .
     private lateinit var dataBinding: ActivityMainBinding
+
     //Persons Adapter
     private val personAdapter: PersonAdapter by inject()
-    private lateinit var destFile: File
-    private val CAMERA_REQUEST:Int=0
-    private val REQUEST_IMAGES_CODE:Int=1
-    private val FOLDER = Environment.getExternalStorageDirectory().absolutePath
-    private var strCompressImageFile = ""
+    private lateinit var personImgBitmap: Bitmap
+
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +46,28 @@ class MainActivity : AppCompatActivity() {
         initViews()
         //Initialize ViewModel observer
         initViewModelObserver()
+
+        initActivityResult()
+    }
+
+    private fun initActivityResult() {
+        activityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result?.resultCode == RESULT_OK && result.data != null) {
+                    val bitmap: Bitmap
+                    val bundle = result.data!!.extras
+                    bitmap = if (bundle != null) {
+                        bundle.get("data") as Bitmap
+                    } else {
+                        val uri = result.data!!.data
+                        MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+                    }
+                    if (bitmap != null) {
+                        personImgBitmap = bitmap
+                        loadPic(dataBinding.personImg, bitmap)
+                    }
+                }
+            }
     }
 
     private fun initViews() {
@@ -64,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                     PersonTable(
                         personName = etPersonName.text.toString(),
                         personNo = etPersonMobileNo.text.toString(),
-                        personImg = strCompressImageFile
+                        personImg = personImgBitmap
                     )
                 )
             }
@@ -81,12 +98,16 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ).withListener(object :MultiplePermissionsListener{
+        ).withListener(object : MultiplePermissionsListener {
             override fun onPermissionsChecked(permissions: MultiplePermissionsReport?) {
-                if(permissions!!.areAllPermissionsGranted())
+                if (permissions!!.areAllPermissionsGranted())
                     selectFile()
-                if(permissions.isAnyPermissionPermanentlyDenied)
-                    Toast.makeText(this@MainActivity,"Camera access needed to take pictures!!",Toast.LENGTH_SHORT).show()
+                if (permissions.isAnyPermissionPermanentlyDenied)
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Camera access needed to take pictures!!",
+                        Toast.LENGTH_SHORT
+                    ).show()
             }
 
             override fun onPermissionRationaleShouldBeShown(
@@ -96,11 +117,13 @@ class MainActivity : AppCompatActivity() {
 
             }
 
-        }).withErrorListener { Toast.makeText(
-            this,
-            "Error Occured!!!!!",
-            Toast.LENGTH_SHORT
-        ).show() }
+        }).withErrorListener {
+            Toast.makeText(
+                this,
+                "Error!!!!!",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
             .onSameThread()
             .check()
 
@@ -113,29 +136,19 @@ class MainActivity : AppCompatActivity() {
         )
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.choose_source)
-        builder.setItems(items) { dialog, item ->
-            if (items[item] ==getString(R.string.choose_from_camera)) {
-                val time = System.currentTimeMillis().toString() + ".png"
-                val builder = StrictMode.VmPolicy.Builder()
-                StrictMode.setVmPolicy(builder.build())
+        builder.setItems(items) { _, item ->
+            if (items[item] == getString(R.string.choose_from_camera)) {
                 val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                destFile =
-                    File(Environment.getExternalStorageDirectory(), time)
-                intent.putExtra(
-                    MediaStore.EXTRA_OUTPUT,
-                    FileProvider.getUriForFile(
-                        this,
-                        BuildConfig.APPLICATION_ID+".provider",
-                        destFile
-                    )
-                )
-                startActivityForResult(intent, CAMERA_REQUEST)
+                if (intent.resolveActivity(packageManager) != null) {
+                    activityResultLauncher.launch(intent)
+                }
+
             } else if (items[item] == getString(R.string.choose_from_gallery)) {
                 val intent = Intent()
                 intent.type = "image/*"
                 intent.addCategory(Intent.CATEGORY_OPENABLE)
                 intent.action = Intent.ACTION_GET_CONTENT
-                startActivityForResult(intent, REQUEST_IMAGES_CODE)
+                activityResultLauncher.launch(intent)
             }
         }
         builder.show()
@@ -146,37 +159,8 @@ class MainActivity : AppCompatActivity() {
             it?.let {
                 personAdapter.setPersonsData(it)
             }
-
         })
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CAMERA_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                val dir = File(FOLDER + "/" + getString(R.string.app_name) + "/images/")
-                if (!dir.exists()) {
-                    dir.mkdirs()
-                }
-                strCompressImageFile =
-                    SiliCompressor.with(this)
-                        .compress(destFile.absolutePath, dir, true)
-                dataBinding.personImg.load(File(strCompressImageFile))
-            }
-        }
-        if (requestCode == REQUEST_IMAGES_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                val dir = File(FOLDER + "/" + getString(R.string.app_name) + "/images/")
-                if (!dir.exists()) {
-                    dir.mkdirs()
-                }
-                val filePath = PathUtil.getPath(this, data?.data)
-                strCompressImageFile = SiliCompressor.with(this)
-                    .compress(filePath, dir, false)
-                dataBinding.personImg.load(File(strCompressImageFile))
 
-            }
-        }
-
-    }
 
 }
